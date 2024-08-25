@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <title>Disease Prediction Client Side</title>
+    <link rel="stylesheet" href="./global.css" />
+    <link rel="stylesheet" href="./desktop-1.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kameron:wght@400&display=swap" />
+</head>
+<body>
+    <div class="desktop-1">
+        <div class="disease-prediction-client-side-wrapper">
+            <h1 class="disease-prediction-client">Disease prediction client side</h1>
+        </div>
+        <main class="frame-group">
+            <form id="predictionForm">
+                <div class="year-input-container-wrapper">
+                    <div class="year-input-container">
+                        <h1 class="enter-year">Enter year</h1>
+                        <div class="text-field-parent">
+                    <div class="text-field">
+                        <input type="number" id="year" name="year" step="1" required>
+                    </div>
+                        <div class="enter-state-parent">
+                            <h1 class="enter-state">Enter state</h1>
+                            <div class="text-field-container">
+                        <div class="text-field">
+                            <input type="text" id="state" name="state" required>
+                        </div>
+                            <div class="enter-district-parent">
+                                <h1 class="enter-district">Enter district</h1>
+                                <div class="text-field">
+                            <input type="text" id="district" name="district" required>
+                        </div>
+                                <h1 class="rice-plantedha">Rice planted(Ha)</h1>
+                                <div class="text-field">
+                            <input type="number" id="area" name="area" step="0.01" required>
+                        </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                    </div>
+                </div>
+                <div class="button-wrapper">
+                    <button type="submit" class="button">
+                        <div class="state-layer">
+                            <div class="prediction-button-label">Submit</div>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+    document.getElementById('predictionForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Get form data
+        const formData = new FormData(this);
+
+        // Convert FormData to JSON
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            jsonData[key] = value;
+        });
+
+        // Send data to the server
+        fetch('/predict', {  // Replace '/predict' with your actual server endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Handle the response from your Python script here
+            // For example, display the prediction result
+            alert('Prediction result: ' + data.prediction);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+    </script>
+</body>
+</html>

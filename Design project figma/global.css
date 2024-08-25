@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+:root {
+  /* fonts */
+  --m3-label-large: Roboto;
+
+  /* font sizes */
+  --m3-label-large-size: 14px;
+  --font-size-5xl: 24px;
+  --m3-body-small-size: 12px;
+  --m3-body-large-size: 16px;
+  --font-size-38xl: 57px;
+  --font-size-27xl: 46px;
+  --font-size-15xl: 34px;
+
+  /* Colors */
+  --schemes-on-primary: #fff;
+  --color-gray-100: #fcfcfc;
+  --schemes-on-secondary-container: #1d192b;
+  --schemes-on-surface: #1d1b20;
+  --schemes-shadow: #000;
+  --schemes-on-surface-variant: #49454f;
+  --schemes-surface-bright: #fef7ff;
+
+  /* Gaps */
+  --gap-xs: 12px;
+
+  /* Paddings */
+  --padding-113xl: 132px;
+  --padding-67xl: 86px;
+  --padding-xl: 20px;
+  --padding-base-5: 16.5px;
+  --padding-9xs: 4px;
+  --padding-base: 16px;
+  --padding-8xl: 27px;
+  --padding-xs: 12px;
+  --padding-22xl: 41px;
+  --padding-3xl-5: 22.5px;
+
+  /* Border radiuses */
+  --br-21xl: 40px;
+  --br-81xl: 100px;
+  --br-5xs: 8px;
+  --br-9xs: 4px;
+  --br-base: 16px;
+
+  /* Effects */
+  --m3-elevation-light-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+    0px 1px 3px rgba(0, 0, 0, 0.3);
+}
