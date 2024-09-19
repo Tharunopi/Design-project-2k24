@@ -598,7 +598,7 @@ dist = ['Pali',
 # data = pd.DataFrame([[1990, 'Chhattisgarh', 'Durg', 397.90]], 
 #                     columns=['Year', 'State Name', 'Dist Name', 'RICE AREA (1000 ha)'])
 # filtered_data = input_ct.transform(data)
-
+predicted = False
 st.title("Poor Model")
 yea = st.slider("select year", 1990, 2017)
 stat = st.selectbox("choose state", states)
@@ -613,5 +613,12 @@ def predict():
     
     x = output_sc.inverse_transform([result])
     st.success(f"Expected yield is {x[0][0]}")
+    
+    predicted = True
 
 st.button("predict", on_click=predict)
+
+sentiment_mapping = ["one", "two", "three", "four", "five"]
+selected = st.feedback("stars")
+if selected is not None:
+    st.toast(f"You rated {sentiment_mapping[selected]} star.")

@@ -23,6 +23,10 @@ def predict():
     result = model_premium.predict(x)
     y = output_sc.inverse_transform([result])
     st.success(f"Expected yield Q/Acre is {y[0][0]}")
+    sentiment_mapping = ["one", "two", "three", "four", "five"]
+    selected = st.feedback("stars")
+    if selected is not None:
+        st.markdown(f"You selected {sentiment_mapping[selected]} star(s).")
 
 st.button("predict", on_click=predict)
     
