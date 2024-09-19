@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
 home_page = st.Page("first.py", title="home", icon=":material/add_circle:")
 cnn_page = st.Page("AAcnn_model.py", title="cnn", icon=":material/add_circle:")
 chatbot = st.Page("Chatbot.py", title="Chatbot", icon=":material/delete:")

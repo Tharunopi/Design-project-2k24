@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
 
 st.title("Welcome to iribot")
 col1, col2, col3 = st.columns(3)

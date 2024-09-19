@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
+
 model_poor = load("rfr_user_model.joblib")
 input_ct = load("ct_output_poor")
 output_sc = load("sc_input_poor")
