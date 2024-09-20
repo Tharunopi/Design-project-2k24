@@ -1,29 +1,69 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
-import time
+import time, random
+import requests
+from joblib import load
 
+
+
+API_KEY = 'ba2e7ef8a27142ddb2b43315242009'
+BASE_URL = 'http://api.weatherapi.com/v1/current.json'
+
+def get_weather(city_name):
+    params = {
+        'key': API_KEY,
+        'q': city_name,
+        'aqi': 'no'  
+    }
+    response = requests.get(BASE_URL, params=params)
+    if response.status_code == 200:
+        weather_data = response.json()
+        return weather_data
+    else:
+        return f"Error: {response.status_code}"
+
+city = 'erode'
+weather_info = get_weather(city)
+
+def weather():
+    pred = [[weather_info["current"]["pressure_mb"], weather_info["current"]["temp_c"], weather_info["current"]["dewpoint_c"], weather_info["current"]["humidity"], weather_info["current"]["cloud"], weather_info["current"]["wind_kph"], weather_info["current"]["wind_degree"]]]
+
+    weather_model = load(r'weather_model')
+    sc_weather = load(r'sc_weather_model')
+
+    pred = sc_weather.transform(pred)
+    r = weather_model.predict(pred)
+    rainfall = ""
+    if r == 0:
+        rainfall += "No"
+    else:
+        rainfall += "Yes"
+    return rainfall
 
 st.title("Welcome to AI assitant")
-col1, col2, col3, col4 = st.columns(4)
-col1.metric("Temperature", "70 °F", "1.2 °F")
-col2.metric("Wind", "9 mph", "-8%")
-col3.metric("Humidity", "86%", "4%")
-now = datetime.now()
-col4.text(f"Today's date: {now.strftime('%Y-%m-%d')}")
-col4.text(f"Session login time: {now.strftime('%H:%M:%S')}")
-col4.image(r"agri_logo.png", width=200)
-  
-# st.divider()
+
+col1, col2, col3, col4, col5 = st.columns(5)
+col1.metric("Temperature", str(weather_info["current"]["temp_c"])+"°C")
+col1.caption(f'Feels like {str(weather_info["current"]["feelslike_c"]) + "°C"}')
+
+col2.metric("Wind", str(weather_info["current"]["wind_kph"])+"Kph")
+
+col3.metric("Humidity", str(weather_info["current"]["humidity"])+"%")
+col3.caption(f'Cloud {str(weather_info["current"]["cloud"])}%')
+
+col4.metric("Rainfall prediction",weather())
+col4.caption("This does not resembles 100% accurate data")
+
+col5.markdown(f'Last updated: {weather_info["current"]["last_updated"]}')
+
 tab1, tab2, tab3 = st.tabs(["Overview", "Technology", "Key features"])
 
-
-
 with tab1:
+    coll1, coll2 = st.columns(2)
     st.subheader("Overview")
     st.markdown("By leveraging machine learning (ML) models, a Convolutional Neural Network (CNN), and a chatbot interface, farmers can receive real-time insights and recommendations tailored to their specific farming needs.")
 
-    st.image(r"ai wheat.jpg", width=500)
+    st.image(r"ai wheat.jpg", width=400)
 
 with tab2:
     st.subheader("Technologies Used")
