@@ -2,7 +2,6 @@ import streamlit as st
 import psycopg2
 import hashlib
 
-# Database parameters
 db_params = {
     "host": "localhost",
     "database": "AgriKnow",
@@ -26,7 +25,6 @@ def check_user_login(number, password):
     conn.close()
     return user
 
-# Check if the user is logged in
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
@@ -40,13 +38,12 @@ if not st.session_state['logged_in']:
         user = check_user_login(login_number, login_password)
         if user:
             st.session_state['logged_in'] = True
-            st.session_state['user_number'] = login_number  # Store the user number
+            st.session_state['user_number'] = login_number  
             st.success("Login successful!")
-            # st.experimental_rerun()  # Optionally refresh to redirect
+            # st.experimental_rerun()  
         else:
             st.error("Invalid credentials")
 else:
-    # Navigation for logged-in users
     home_page = st.Page("first.py", title="Home")
     cnn_page = st.Page("AAcnn_model.py", title="CNN")
     chatbot = st.Page("Chatbot.py", title="Chatbot")
