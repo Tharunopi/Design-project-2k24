@@ -3,7 +3,9 @@ import pandas as pd
 import time, random
 import requests
 from joblib import load
-
+import folium
+from streamlit_folium import st_folium
+from streamlit_extras.mention import mention
 
 
 API_KEY = 'ba2e7ef8a27142ddb2b43315242009'
@@ -35,20 +37,20 @@ def weather():
     r = weather_model.predict(pred)
     rainfall = ""
     if r == 0:
-        rainfall += "No"
+        rainfall += "No🌥️"
     else:
-        rainfall += "Yes"
+        rainfall += "Yes🌦️"
     return rainfall
 
 st.title("Welcome to AI assitant")
 
 col1, col2, col3, col4, col5 = st.columns(5)
-col1.metric("Temperature", str(weather_info["current"]["temp_c"])+"°C")
+col1.metric("Temperature🌞", str(weather_info["current"]["temp_c"])+"°C")
 col1.caption(f'Feels like {str(weather_info["current"]["feelslike_c"]) + "°C"}')
 
-col2.metric("Wind", str(weather_info["current"]["wind_kph"])+"Kph")
+col2.metric("Wind🌬️", str(weather_info["current"]["wind_kph"])+"Kph")
 
-col3.metric("Humidity", str(weather_info["current"]["humidity"])+"%")
+col3.metric("Humidity💦", str(weather_info["current"]["humidity"])+"%")
 col3.caption(f'Cloud {str(weather_info["current"]["cloud"])}%')
 
 col4.metric("Rainfall prediction",weather())
@@ -59,11 +61,11 @@ col5.markdown(f'Last updated: {weather_info["current"]["last_updated"]}')
 tab1, tab2, tab3 = st.tabs(["Overview", "Technology", "Key features"])
 
 with tab1:
-    coll1, coll2 = st.columns(2)
     st.subheader("Overview")
     st.markdown("By leveraging machine learning (ML) models, a Convolutional Neural Network (CNN), and a chatbot interface, farmers can receive real-time insights and recommendations tailored to their specific farming needs.")
-
-    st.image(r"ai wheat.jpg", width=400)
+    coll1, coll2, coll3 = st.columns(3)
+    coll2.image(r"ai wheat.jpg", width=400)
+    coll2.caption("Image represents Overview of the project")
 
 with tab2:
     st.subheader("Technologies Used")
@@ -71,7 +73,9 @@ with tab2:
     st.markdown("Deep Learning: CNN (MobileNet)")
     st.markdown("Chatbot Integration: Gemini API")
     st.markdown("Future Integration: YOLO (object detection), Sign-based LLM")
-    st.image(r"ai wheat2.jpg", width=500)
+    collu1, collu2, collu3 = st.columns(3)
+    collu2.image(r"ai wheat2.jpg", width=500)
+    collu2.caption("Image represents Technology that are used in this project")
 
 with tab3:
     st.subheader("Key features")
@@ -105,10 +109,21 @@ st.map(df, latitude='Latitude', longitude='Longitude', size='Wheat_Production')
 
 st.divider()
 st.header("Get services from our expert team")
-col11, col12 = st.columns(2)
+col11, col12, col13 = st.columns(3)
 
 col11.subheader("Email")
 col11.markdown("iribotaqeel@gmail.com")
+with col11:
+    mention(label="Check project repo", icon="github", url="https://github.com/Tharunopi/Design-project-2k24")
 
 col12.subheader("Phone")
 col12.markdown("+91 93604 96536")
+
+col13.subheader("Locate us")
+
+m = folium.Map(location=[11.447155, 77.769431], zoom_start=16)
+folium.Marker(
+            [11.447155, 77.769431], popup="AgriKnow Office", tooltip="AgriKnow Office"
+).add_to(m)
+with col13:
+    st_data = st_folium(m, width=300, height=300)
