@@ -1,8 +1,9 @@
 import streamlit as st
 import psycopg2
 import hashlib
+import time
 
-# Database parameters
+st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
 db_params = {
     "host": "localhost",
     "database": "AgriKnow",
@@ -26,27 +27,31 @@ def check_user_login(number, password):
     conn.close()
     return user
 
-# Check if the user is logged in
 if 'logged_in' not in st.session_state:
     st.session_state['logged_in'] = False
 
 if not st.session_state['logged_in']:
-    st.header("Login")
+    col1, col2, col3, col4, col5 = st.columns(5)
+    col3.header("Login")
 
     login_number = st.text_input("Number")
     login_password = st.text_input("Password", type="password")
-
-    if st.button("Login"):
-        user = check_user_login(login_number, login_password)
-        if user:
-            st.session_state['logged_in'] = True
-            st.session_state['user_number'] = login_number  # Store the user number
-            st.success("Login successful!")
-            # st.experimental_rerun()  # Optionally refresh to redirect
-        else:
-            st.error("Invalid credentials")
+    
+    col11, col12, col13, col14, col15 = st.columns(5)
+    with col13:
+        if st.button("Login"):
+            user = check_user_login(login_number, login_password)
+            if user:
+                st.session_state['logged_in'] = True
+                st.session_state['user_number'] = login_number  
+                st.success("Login successful!")
+                with st.spinner("Logging in..."):
+                    time.sleep(3)
+                
+                st.rerun()  
+            else:
+                st.error("Invalid credentials")
 else:
-    # Navigation for logged-in users
     home_page = st.Page("first.py", title="Home")
     cnn_page = st.Page("AAcnn_model.py", title="CNN")
     chatbot = st.Page("Chatbot.py", title="Chatbot")

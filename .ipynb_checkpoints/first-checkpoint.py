@@ -1,12 +1,37 @@
 import streamlit as st
 import pandas as pd
 import time, random
+import psycopg2
 import requests
 from joblib import load
 import folium
 from streamlit_folium import st_folium
 from streamlit_extras.mention import mention
+st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
+db_params = {
+    "host": "localhost",
+    "database": "AgriKnow",
+    "user": "postgres",
+    "password": "admin123"
+}
 
+def connect_to_db():
+    return psycopg2.connect(**db_params)
+
+def get_user_data(number):
+    conn = connect_to_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE number = %s", (number,))
+    user_data = cur.fetchone()
+    cur.close()
+    conn.close()
+    return user_data
+
+if 'logged_in' in st.session_state and st.session_state['logged_in']:
+    user_number = st.session_state.get('user_number')  
+    user_data = get_user_data(user_number)
+
+name, number, location, land_area, planted, email = user_data[2], user_data[1], user_data[3], user_data[5], user_data[6], user_data[7]
 
 API_KEY = 'ba2e7ef8a27142ddb2b43315242009'
 BASE_URL = 'http://api.weatherapi.com/v1/current.json'
@@ -24,8 +49,7 @@ def get_weather(city_name):
     else:
         return f"Error: {response.status_code}"
 
-city = 'erode'
-weather_info = get_weather(city)
+weather_info = get_weather(location)
 
 def weather():
     pred = [[weather_info["current"]["pressure_mb"], weather_info["current"]["temp_c"], weather_info["current"]["dewpoint_c"], weather_info["current"]["humidity"], weather_info["current"]["cloud"], weather_info["current"]["wind_kph"], weather_info["current"]["wind_degree"]]]
@@ -42,13 +66,15 @@ def weather():
         rainfall += "Yes🌦️"
     return rainfall
 
-st.title("Welcome to AI assitant")
+st.title(f"Hi {name}, Welcome to AgriKnow")
+st.divider()
 
 col1, col2, col3, col4, col5 = st.columns(5)
 col1.metric("Temperature🌞", str(weather_info["current"]["temp_c"])+"°C")
 col1.caption(f'Feels like {str(weather_info["current"]["feelslike_c"]) + "°C"}')
 
 col2.metric("Wind🌬️", str(weather_info["current"]["wind_kph"])+"Kph")
+col2.caption(f'Location {location}')
 
 col3.metric("Humidity💦", str(weather_info["current"]["humidity"])+"%")
 col3.caption(f'Cloud {str(weather_info["current"]["cloud"])}%')
@@ -80,14 +106,8 @@ with tab2:
 with tab3:
     st.subheader("Key features")
     st.markdown("Yield Prediction")
-    st.link_button("Go to yied prediction model", "")
-    st.caption("This navigate to prediction page")
     st.markdown("Disease Detection")
-    st.link_button("Go to disease prediction model", "")
-    st.caption("This navigate to prediction cnn model page")
     st.markdown("Farmer Chatbot")
-    st.link_button("Go to Chatbot to get assitant", "")
-    st.caption("This navigate to chatbot page")
 
 data = {
     'District': ['Amritsar', 'Ludhiana', 'Patiala', 'Karnal', 'Hisar', 'Ambala', 'Bareilly', 'Lucknow', 'Kanpur', 
@@ -121,9 +141,9 @@ col12.markdown("+91 93604 96536")
 
 col13.subheader("Locate us")
 
-m = folium.Map(location=[11.447155, 77.769431], zoom_start=16)
+m = folium.Map(location=[11.4460598, 77.7690739], zoom_start=16)
 folium.Marker(
-            [11.447155, 77.769431], popup="AgriKnow Office", tooltip="AgriKnow Office"
+            [11.4460598, 77.7690739], popup="AgriKnow Office", tooltip="AgriKnow Office"
 ).add_to(m)
 with col13:
     st_data = st_folium(m, width=300, height=300)

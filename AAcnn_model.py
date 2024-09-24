@@ -4,6 +4,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from keras.preprocessing import image
+st.set_page_config(layout="wide")
 model = tf.keras.models.load_model("mobilenet.h5")
 indives = {0:'Brown_rust', 1:'Healthy', 2:'Yellow_rust'}
 st.title("Image prediction model")

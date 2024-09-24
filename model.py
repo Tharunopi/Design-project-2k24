@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 
+st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
+st.set_page_config(layout="wide")
 model_premium = load("svr_premium_model.joblib")
 input_sc = load("sc_input_premium")
 output_sc = load("sc_output_premium")

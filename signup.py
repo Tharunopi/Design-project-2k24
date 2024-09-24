@@ -3,6 +3,8 @@ import psycopg2
 import pandas as pd
 import hashlib
 
+st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
+st.set_page_config(layout="wide")
 db_params = {
     "host": "localhost",
     "database": "AgriKnow",

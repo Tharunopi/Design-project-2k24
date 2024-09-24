@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-
+st.set_page_config(layout="wide")
+st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
 options = st.multiselect(
     "Select dataset visualize",
     ["Dataset 1", "Dataset 2", "Dataset 3(Weather data)"],
