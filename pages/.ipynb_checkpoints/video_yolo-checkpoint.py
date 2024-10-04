@@ -7,6 +7,8 @@ from ultralytics import YOLO
 from PIL import Image
 from sort import Sort
 
+cv2.ocl.setUseOpenCL(False)
+
 model = YOLO("yolov8n.pt")
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
 "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat",
