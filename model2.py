@@ -2,6 +2,29 @@ from joblib import load
 import pandas as pd
 import numpy as np
 import streamlit as st
+import psycopg2
+
+db_params = {
+    "host": "localhost",
+    "database": "AgriKnow",
+    "user": "postgres",
+    "password": "admin123"
+}
+
+def connect_to_db():
+    return psycopg2.connect(**db_params)
+
+def insert_users_data(number, result):
+    conn = connect_to_db()
+    cur = conn.cursor()
+
+    cur.execute(
+    "INSERT INTO model2_data (number, model2_result) VALUES (%s, %s)",
+    (number, result)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
 
 st.set_page_config(layout="wide")
 st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
@@ -601,7 +624,7 @@ dist = ['Pali',
 #                     columns=['Year', 'State Name', 'Dist Name', 'RICE AREA (1000 ha)'])
 # filtered_data = input_ct.transform(data)
 predicted = False
-st.title("Poor Model")
+st.title("Model-2")
 yea = st.slider("select year", 1990, 2017)
 stat = st.selectbox("choose state", states)
 dis = st.selectbox("choose district", dist)
@@ -615,6 +638,8 @@ def predict():
     
     x = output_sc.inverse_transform([result])
     st.success(f"Expected yield is {x[0][0]}")
+    user_number = st.session_state.get("user_number")
+    insert_users_data(user_number, str(x[0][0]))
     
     predicted = True
 

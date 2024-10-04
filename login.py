@@ -61,5 +61,4 @@ else:
     profile = st.Page("profile.py", title="Profile")
 
     pg = st.navigation([home_page, cnn_page, chatbot, model, model2, tech, profile])
-    # st.set_page_config(page_title="Data manager", page_icon=":material/edit:", layout="wide")
     pg.run()

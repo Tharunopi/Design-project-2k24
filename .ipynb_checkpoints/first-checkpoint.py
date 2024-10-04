@@ -27,6 +27,18 @@ def get_user_data(number):
     conn.close()
     return user_data
 
+def insert_users_data(number, result):
+    conn = connect_to_db()
+    cur = conn.cursor()
+
+    cur.execute(
+    "INSERT INTO weather_data (number, weather_result) VALUES (%s, %s)",
+    (number, result)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
 if 'logged_in' in st.session_state and st.session_state['logged_in']:
     user_number = st.session_state.get('user_number')  
     user_data = get_user_data(user_number)
@@ -64,6 +76,9 @@ def weather():
         rainfall += "No🌥️"
     else:
         rainfall += "Yes🌦️"
+        
+    user_number = st.session_state.get('user_number')
+    insert_users_data(user_number, rainfall)
     return rainfall
 
 st.title(f"Hi {name}, Welcome to AgriKnow")

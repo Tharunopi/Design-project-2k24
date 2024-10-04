@@ -4,12 +4,41 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from keras.preprocessing import image
+import psycopg2
+import json
+from datetime import datetime
+
+db_params = {
+    "host": "localhost",
+    "database": "AgriKnow",
+    "user": "postgres",
+    "password": "admin123"
+}
+
+def connect_to_db():
+    return psycopg2.connect(**db_params)
+
+def insert_users_data(number, result):
+    conn = connect_to_db()
+    cur = conn.cursor()
+
+    cur.execute(
+    "INSERT INTO cnn_data (number, result) VALUES (%s, %s)",
+    (number, result)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
 st.set_page_config(layout="wide")
 model = tf.keras.models.load_model("mobilenet.h5")
+
 indives = {0:'Brown_rust', 1:'Healthy', 2:'Yellow_rust'}
 st.title("Image prediction model")
 st.logo(r"C:\Users\tharu\OneDrive\Pictures\Screenshots 1\Screenshot 2024-07-13 144102.png")
+
 raw_data = st.file_uploader("choose an image file", accept_multiple_files=False)
+
 if raw_data is not None:
     img = Image.open(raw_data)
     img = img.resize((224, 224)) 
@@ -60,6 +89,9 @@ if raw_data is not None:
         for i,j in enumerate(result):
             if j == 1:
                 resul = indives[i]
+                user_number = st.session_state.get('user_number')
+                formatted_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                insert_users_data(str(user_number), str(resul))
                 with st.spinner('Your Image is cooking🦇'):
                     time.sleep(2)
                 with st.container():
