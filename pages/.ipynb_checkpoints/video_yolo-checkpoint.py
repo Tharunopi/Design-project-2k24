@@ -5,6 +5,7 @@ import cvzone
 import numpy as np
 from ultralytics import YOLO
 from PIL import Image
+from sort import Sort
 
 model = YOLO("yolov8n.pt")
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
@@ -19,9 +20,11 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
 "teddy bear", "hair drier", "toothbrush"
 ]
 st.title("YOLO Object Detection")
+tracker = Sort(max_age=30, min_hits=3, iou_threshold=0.3)
 
 def process_frame(frame):
     results = model(frame, stream=True)
+    detections = np.empty((0, 5))
     for r in results:
         boxes = r.boxes
         for box in boxes:
@@ -29,11 +32,21 @@ def process_frame(frame):
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
             w, h = x2 - x1, y2 - y1
             conf = math.ceil((box.conf[0]*100))/100
-            cls = int(box.cls[0])
-            curr_cls = classNames[cls]
+            if conf > 0.50:
+                cls = int(box.cls[0])
+                curr_cls = classNames[cls]
+                curr_ary = [x1, y1, x2, y2, conf]
+                detections = np.vstack((detections, curr_ary))
+            
+        tracker_result = tracker.update(detections)
+        for k in tracker_result:
+            x1, y1, x2, y2, id = k
+            x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+            w, h = x2 - x1, y2 - y1
+
             cvzone.cornerRect(frame, (x1, y1, w, h), l=9)
-            cvzone.putTextRect(frame, f'{curr_cls} {conf}', (max(0, x1), max(35, y1)), 
-                               scale=1, thickness=1)
+            cvzone.putTextRect(frame, f'class {curr_cls} {conf} id{id}', (max(0, x1), max(15, y1)), scale=1, thickness=1, offset=5)
+            
     return frame
 
 def live_camera():
