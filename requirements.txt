@@ -14,3 +14,4 @@ ultralytics
 cvzone
 filterpy
 scikit-image
+cv2
